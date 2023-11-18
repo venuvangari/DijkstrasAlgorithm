@@ -1,0 +1,62 @@
+#include <iostream>
+#include <vector>
+
+std::string longestCommonSubstring(const std::string& str1, const std::string& str2) {
+    int m = str1.length();
+    int n = str2.length();
+
+    // Create a 2D table to store the length of common substrings
+    std::vector<std::vector<int>> dp(m + 1, std::vector<int>(n + 1, 0));
+
+    // Variables to store the length of the longest common substring and its ending index
+    int maxLength = 0;
+    int endIndex = 0;
+
+    // Build the table and find the longest common substring
+    for (int i = 1; i <= m; ++i) {
+        for (int j = 1; j <= n; ++j) {
+            if (str1[i - 1] == str2[j - 1]) {
+                dp[i][j] = dp[i - 1][j - 1] + 1;
+
+                // Update the variables if we find a longer common substring
+                if (dp[i][j] > maxLength) {
+                    maxLength = dp[i][j];
+                    endIndex = i - 1;
+                }
+            } else {
+                dp[i][j] = 0;  // No common substring found at this point
+            }
+        }
+    }
+
+    // Extract the longest common substring
+    std::string result = str1.substr(endIndex - maxLength + 1, maxLength);
+
+    return result;
+}
+
+int main() {
+    // Example strings
+    std::string str1 = "ABAB";
+    std::string str2 = "BABA";
+
+    // Find the longest common substring
+    std::string commonSubstring = longestCommonSubstring(str1, str2);
+
+    // Print the result
+    std::cout << "Input Strings:\n"
+              << "String 1: " << str1 << "\nString 2: " << str2 << "\n\n";
+
+    // Print the dynamic programming table
+    std::cout << "Dynamic Programming Table:\n";
+    for (int i = 0; i <= str1.length(); ++i) {
+        for (int j = 0; j <= str2.length(); ++j) {
+            std::cout << longestCommonSubstring(str1.substr(0, i), str2.substr(0, j)) << " ";
+        }
+        std::cout << "\n";
+    }
+
+    std::cout << "\nLongest Common Substring:\n" << commonSubstring << std::endl;
+
+    return 0;
+}
